@@ -45,7 +45,12 @@ struct widgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        VStack {
+        ZStack {
+            Image("WidgetBackground")                       .resizable()
+                .scaledToFill()
+                .frame(width: 200, height: 245, alignment: .topLeading)
+                .clipped()
+            
             Text("Time:")
             Text(entry.date, style: .time)
 
@@ -54,7 +59,7 @@ struct widgetEntryView : View {
         }
     }
 }
-
+            
 struct widget: Widget {
     let kind: String = "widget"
 
