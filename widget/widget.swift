@@ -54,8 +54,7 @@ struct widgetEntryView : View {
             Text("Time:")
             Text(entry.date, style: .time)
 
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+            Text(entry.configuration.library.rawValue)
         }
     }
 }
@@ -74,13 +73,13 @@ struct widget: Widget {
 extension ConfigurationAppIntent {
     fileprivate static var smiley: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "😀"
+        intent.library = Library.maryIdemaPew
         return intent
     }
     
     fileprivate static var starEyes: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "🤩"
+        intent.library = Library.steelcase
         return intent
     }
 }
