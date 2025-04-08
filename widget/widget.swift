@@ -71,15 +71,27 @@ struct widget: Widget {
 }
 
 extension ConfigurationAppIntent {
-    fileprivate static var smiley: ConfigurationAppIntent {
+    fileprivate static var maryIdemaPew: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
         intent.library = Library.maryIdemaPew
         return intent
     }
     
-    fileprivate static var starEyes: ConfigurationAppIntent {
+    fileprivate static var steelcase: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
         intent.library = Library.steelcase
+        return intent
+    }
+    
+    fileprivate static var freyFoundation: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.library = Library.freyFoundation
+        return intent
+    }
+    
+    fileprivate static var lemmen: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.library = Library.lemmen
         return intent
     }
 }
@@ -87,6 +99,8 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemSmall) {
     widget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .smiley)
-    SimpleEntry(date: .now, configuration: .starEyes)
+    SimpleEntry(date: .now, configuration: .maryIdemaPew)
+    SimpleEntry(date: .now, configuration: .steelcase)
+    SimpleEntry(date: .now, configuration: .freyFoundation)
+    SimpleEntry(date: .now, configuration: .lemmen)
 }

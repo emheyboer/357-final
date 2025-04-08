@@ -18,8 +18,6 @@ enum Library : String {
 extension Library: AppEnum {
     static var caseDisplayRepresentations: [Library: DisplayRepresentation] = [
         .maryIdemaPew: DisplayRepresentation(title: "Mary Idema Pew Library"),
-        //                                       subtitle: "Mountain bike ride",
-        //                                       image: imageRepresentation[.biking]),
             .steelcase: DisplayRepresentation(title: "Steelcase Library"),
         .freyFoundation: DisplayRepresentation(title: "Frey Foundation Learning Commons"),
         .lemmen: DisplayRepresentation(title: "Lemmen Library & Archives"),
