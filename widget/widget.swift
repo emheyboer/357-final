@@ -45,16 +45,22 @@ struct widgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        ZStack {
-            Image("WidgetBackground")                       .resizable()
-                .scaledToFill()
-                .frame(width: 200, height: 245, alignment: .topLeading)
-                .clipped()
-            
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text(entry.configuration.library.rawValue)
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Time:")
+                Text(entry.date, style: .time)
+                
+                Text(entry.configuration.library.rawValue)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Image("WidgetBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 160, height: 245, alignment: .bottomTrailing)
+                    .clipped()
+                    .cornerRadius(10)
+            }
         }
     }
 }
