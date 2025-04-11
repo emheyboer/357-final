@@ -12,8 +12,15 @@ struct Location: Codable {
     let times: Times
     let rendered: String
 }
+
+struct Hours: Codable {
+    let from: String
+    let to: String
+}
+
 struct Times: Codable {
     let currently_open: Bool
+    let hours: [Hours]
 }
 
 struct LibrariesResponse: Codable {

@@ -8,13 +8,15 @@
 import WidgetKit
 import SwiftUI
 
+let preview_location = Location(name: "Library", category: "library",times: Times(currently_open: false, hours: []), rendered: "6:00am - 6:00pm")
+
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), hours: "Hours", open: false)
+        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), location: preview_location)
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration, hours: "Hours", open: false)
+        SimpleEntry(date: Date(), configuration: configuration, location: preview_location)
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
@@ -26,13 +28,13 @@ struct Provider: AppIntentTimelineProvider {
         let library: LibraryEnum = configuration.library
         print(library)
         print(viewModel.libraries)
-        let location = viewModel.libraries[library]!
+        let location = viewModel.libraries[library] ?? preview_location
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration, hours: location.rendered, open: location.times.currently_open)
+            let entry = SimpleEntry(date: entryDate, configuration: configuration, location: location)
             entries.append(entry)
         }
 
@@ -47,8 +49,7 @@ struct Provider: AppIntentTimelineProvider {
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let configuration: ConfigurationAppIntent
-    let hours: String
-    let open: Bool
+    let location: Location
 }
 
 struct widgetEntryView : View {
@@ -59,12 +60,21 @@ struct widgetEntryView : View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.configuration.library.rawValue)
-                if entry.open {
-                    Text("Open")
+                
+                let has_hours = entry.location.times.hours.count > 0
+                if entry.location.times.currently_open {
+                    if has_hours {
+                        Text("Open until \(entry.location.times.hours[0].to)")
+                    } else {
+                        Text("Open")
+                    }
                 } else {
-                    Text("Closed")
+                    if has_hours {
+                        Text("Closed until \(entry.location.times.hours[0].from)")
+                    } else {
+                        Text("Closed")
+                    }
                 }
-                Text(entry.hours)
                 
                 
             }
@@ -126,8 +136,8 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemSmall) {
     widget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .maryIdemaPew, hours: "7:30am - 6:00pm", open: false)
-    SimpleEntry(date: .now, configuration: .steelcase, hours: "8:00am - 6:00pm", open: false)
-    SimpleEntry(date: .now, configuration: .freyFoundation, hours: "8:00am - 5:00pm", open: false)
-    SimpleEntry(date: .now, configuration: .lemmen, hours: "8:00am - 4:30pm", open: false)
+    SimpleEntry(date: .now, configuration: .maryIdemaPew, location: preview_location)
+    SimpleEntry(date: .now, configuration: .steelcase, location: preview_location)
+    SimpleEntry(date: .now, configuration: .freyFoundation, location: preview_location)
+    SimpleEntry(date: .now, configuration: .lemmen, location: preview_location)
 }
