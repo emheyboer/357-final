@@ -43,6 +43,7 @@ struct SimpleEntry: TimelineEntry {
 
 struct widgetEntryView : View {
     var entry: Provider.Entry
+    @Environment(\.widgetFamily) var family
 
     var body: some View {
         HStack {
@@ -53,13 +54,16 @@ struct widgetEntryView : View {
                 Text(entry.configuration.library.rawValue)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            HStack {
-                Image("WidgetBackground")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 160, height: 245, alignment: .bottomTrailing)
-                    .clipped()
-                    .cornerRadius(10)
+            if family != WidgetFamily.systemSmall  {
+                HStack {
+                    Image(entry.configuration.library.rawValue)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 170, height: 400, alignment: .bottomTrailing)
+                        .clipped()
+                        .cornerRadius(10)
+                        .padding(.trailing, -16)
+                }
             }
         }
     }
@@ -72,7 +76,7 @@ struct widget: Widget {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             widgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
-        }
+            }
     }
 }
 
