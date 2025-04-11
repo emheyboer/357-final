@@ -10,11 +10,11 @@ import SwiftUI
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), hours: "Hours")
+        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), hours: "Hours", open: false)
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration, hours: "Hours")
+        SimpleEntry(date: Date(), configuration: configuration, hours: "Hours", open: false)
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
@@ -32,7 +32,7 @@ struct Provider: AppIntentTimelineProvider {
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration, hours: location.rendered)
+            let entry = SimpleEntry(date: entryDate, configuration: configuration, hours: location.rendered, open: location.times.currently_open)
             entries.append(entry)
         }
 
@@ -48,6 +48,7 @@ struct SimpleEntry: TimelineEntry {
     let date: Date
     let configuration: ConfigurationAppIntent
     let hours: String
+    let open: Bool
 }
 
 struct widgetEntryView : View {
@@ -57,10 +58,15 @@ struct widgetEntryView : View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Hours:")
+                Text(entry.configuration.library.rawValue)
+                if entry.open {
+                    Text("Open")
+                } else {
+                    Text("Closed")
+                }
                 Text(entry.hours)
                 
-                Text(entry.configuration.library.rawValue)
+                
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if family != WidgetFamily.systemSmall  {
@@ -120,8 +126,8 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemSmall) {
     widget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .maryIdemaPew, hours: "7:30am - 6:00pm")
-    SimpleEntry(date: .now, configuration: .steelcase, hours: "8:00am - 6:00pm")
-    SimpleEntry(date: .now, configuration: .freyFoundation, hours: "8:00am - 5:00pm")
-    SimpleEntry(date: .now, configuration: .lemmen, hours: "8:00am - 4:30pm")
+    SimpleEntry(date: .now, configuration: .maryIdemaPew, hours: "7:30am - 6:00pm", open: false)
+    SimpleEntry(date: .now, configuration: .steelcase, hours: "8:00am - 6:00pm", open: false)
+    SimpleEntry(date: .now, configuration: .freyFoundation, hours: "8:00am - 5:00pm", open: false)
+    SimpleEntry(date: .now, configuration: .lemmen, hours: "8:00am - 4:30pm", open: false)
 }
