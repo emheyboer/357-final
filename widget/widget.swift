@@ -10,21 +10,29 @@ import SwiftUI
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
+        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), hours: "Hours")
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration)
+        SimpleEntry(date: Date(), configuration: configuration, hours: "Hours")
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
         var entries: [SimpleEntry] = []
+        
+        let viewModel = LibrariesViewModel()
+        await fetchLibraries(viewModel: viewModel)
+        
+        let library: LibraryEnum = configuration.library
+        print(library)
+        print(viewModel.libraries)
+        let location = viewModel.libraries[library]!
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
+            let entry = SimpleEntry(date: entryDate, configuration: configuration, hours: location.rendered)
             entries.append(entry)
         }
 
@@ -39,6 +47,7 @@ struct Provider: AppIntentTimelineProvider {
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let configuration: ConfigurationAppIntent
+    let hours: String
 }
 
 struct widgetEntryView : View {
@@ -47,8 +56,8 @@ struct widgetEntryView : View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Time:")
-                Text(entry.date, style: .time)
+                Text("Hours:")
+                Text(entry.hours)
                 
                 Text(entry.configuration.library.rawValue)
             }
@@ -64,6 +73,8 @@ struct widgetEntryView : View {
         }
     }
 }
+
+
             
 struct widget: Widget {
     let kind: String = "widget"
@@ -79,25 +90,25 @@ struct widget: Widget {
 extension ConfigurationAppIntent {
     fileprivate static var maryIdemaPew: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.library = Library.maryIdemaPew
+        intent.library = LibraryEnum.maryIdemaPew
         return intent
     }
     
     fileprivate static var steelcase: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.library = Library.steelcase
+        intent.library = LibraryEnum.steelcase
         return intent
     }
     
     fileprivate static var freyFoundation: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.library = Library.freyFoundation
+        intent.library = LibraryEnum.freyFoundation
         return intent
     }
     
     fileprivate static var lemmen: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.library = Library.lemmen
+        intent.library = LibraryEnum.lemmen
         return intent
     }
 }
@@ -105,8 +116,8 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemSmall) {
     widget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .maryIdemaPew)
-    SimpleEntry(date: .now, configuration: .steelcase)
-    SimpleEntry(date: .now, configuration: .freyFoundation)
-    SimpleEntry(date: .now, configuration: .lemmen)
+    SimpleEntry(date: .now, configuration: .maryIdemaPew, hours: "7:30am - 6:00pm")
+    SimpleEntry(date: .now, configuration: .steelcase, hours: "8:00am - 6:00pm")
+    SimpleEntry(date: .now, configuration: .freyFoundation, hours: "8:00am - 5:00pm")
+    SimpleEntry(date: .now, configuration: .lemmen, hours: "8:00am - 4:30pm")
 }

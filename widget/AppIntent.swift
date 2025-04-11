@@ -8,15 +8,15 @@
 import WidgetKit
 import AppIntents
 
-enum Library : String {
+enum LibraryEnum : String {
     case maryIdemaPew = "Mary Idema Pew Library"
     case steelcase = "Steelcase Library"
     case freyFoundation = "Frey Foundation Learning Commons"
     case lemmen = "Lemmen Library & Archives"
 }
 
-extension Library: AppEnum {
-    static var caseDisplayRepresentations: [Library: DisplayRepresentation] = [
+extension LibraryEnum: AppEnum {
+    static var caseDisplayRepresentations: [LibraryEnum: DisplayRepresentation] = [
         .maryIdemaPew: DisplayRepresentation(title: "Mary Idema Pew Library"),
             .steelcase: DisplayRepresentation(title: "Steelcase Library"),
         .freyFoundation: DisplayRepresentation(title: "Frey Foundation Learning Commons"),
@@ -36,5 +36,5 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var description: IntentDescription { "This is an example widget." }
     
     @Parameter(title: "Library", default: .maryIdemaPew)
-    var library: Library
+    var library: LibraryEnum
 }
