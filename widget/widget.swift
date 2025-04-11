@@ -2,7 +2,7 @@
 //  widget.swift
 //  widget
 //
-//  Created by emh on 4/6/25.
+//  Created by Emily Heyboer and Logan Scheurer on 4/6/25.
 //
 
 import WidgetKit
