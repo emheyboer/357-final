@@ -61,16 +61,16 @@ struct widgetEntryView : View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.configuration.library.rawValue)
                 
-                let has_hours = entry.location.times.hours.count > 0
+                let has_hours = entry.location.times.hours != nil &&  entry.location.times.hours!.count > 0
                 if entry.location.times.currently_open {
                     if has_hours {
-                        Text("Open until \(entry.location.times.hours[0].to)")
+                        Text("Open until \(entry.location.times.hours![0].to)")
                     } else {
                         Text("Open")
                     }
                 } else {
                     if has_hours {
-                        Text("Closed until \(entry.location.times.hours[0].from)")
+                        Text("Closed until \(entry.location.times.hours![0].from)")
                     } else {
                         Text("Closed")
                     }

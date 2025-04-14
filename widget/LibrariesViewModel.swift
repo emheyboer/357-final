@@ -20,7 +20,7 @@ struct Hours: Codable {
 
 struct Times: Codable {
     let currently_open: Bool
-    let hours: [Hours]
+    let hours: [Hours]?
 }
 
 struct LibrariesResponse: Codable {
