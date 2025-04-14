@@ -67,12 +67,21 @@
 			);
 			target = 9940F0E62DA348F00086F988 /* widgetExtension */;
 		};
+		997F1E472DAC8F2500763C9C /* Exceptions for "widget" folder in "isTheLibraryOpen" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LibrariesHelper.swift,
+				LibrariesViewModel.swift,
+			);
+			target = 994B4AA42DA3471F00059168 /* isTheLibraryOpen */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9940F0ED2DA348F00086F988 /* widget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				997F1E472DAC8F2500763C9C /* Exceptions for "widget" folder in "isTheLibraryOpen" target */,
 				9940F1012DA348F30086F988 /* Exceptions for "widget" folder in "widgetExtension" target */,
 			);
 			path = widget;

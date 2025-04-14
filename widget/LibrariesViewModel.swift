@@ -6,11 +6,18 @@
 //
 import SwiftUI
 
-struct Location: Codable {
+struct Location: Codable, Identifiable {
+    let id = UUID()
     let name: String
     let category: String
     let times: Times
     let rendered: String
+    enum CodingKeys: String, CodingKey {
+        case name
+        case category
+        case times
+        case rendered
+    }
 }
 
 struct Hours: Codable {

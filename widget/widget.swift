@@ -27,7 +27,6 @@ struct Provider: AppIntentTimelineProvider {
         
         let library: LibraryEnum = configuration.library
         print(library)
-        print(viewModel.libraries)
         let location = viewModel.libraries[library] ?? preview_location
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
