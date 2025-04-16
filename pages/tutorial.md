@@ -45,6 +45,57 @@ You'll be prompted to give this extension a name. Once you're done, click "Finis
 Make sure to activate the scheme for our new target when prompted.
 
 ![](./xcode_activate_scheme.png)
+
+### Widget Configuration
+
+Since we want users to be able to select a specific library to show, we need to add that option. We start by defining an enum that stores each possible option. 
+
+```swift
+//  AppIntent.swift
+import WidgetKit
+import AppIntents
+
+enum LibraryEnum : String {
+    case maryIdemaPew = "Mary Idema Pew Library"
+    case steelcase = "Steelcase Library"
+    case freyFoundation = "Frey Foundation Learning Commons"
+    case lemmen = "Lemmen Library & Archives"
+}
+```
+
+Then we need to tell Swift how to display each enum case using an extension.
+
+```swift
+//  AppIntent.swift
+extension LibraryEnum: AppEnum {
+    static var caseDisplayRepresentations: [LibraryEnum: DisplayRepresentation] = [
+        .maryIdemaPew: DisplayRepresentation(title: "Mary Idema Pew Library"),
+            .steelcase: DisplayRepresentation(title: "Steelcase Library"),
+        .freyFoundation: DisplayRepresentation(title: "Frey Foundation Learning Commons"),
+        .lemmen: DisplayRepresentation(title: "Lemmen Library & Archives"),
+    ]
+    
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        TypeDisplayRepresentation(
+            name: LocalizedStringResource("Library", table: "AppIntents"),
+            numericFormat: LocalizedStringResource("\(placeholder: .int) libraries", table: "AppIntents")
+        )
+    }
+}
+```
+
+Finally, we describe the widget configuration (what shows up when you tap "Edit Widget" on iOS) and add our enum as one of the parameters.
+
+```swift
+//  AppIntent.swift
+struct ConfigurationAppIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource { "Configuration" }
+    static var description: IntentDescription { "WidgetKit demo" }
+    
+    @Parameter(title: "Library", default: .maryIdemaPew)
+    var library: LibraryEnum
+}
+```
 ## Conclusions
 
 ## See Also

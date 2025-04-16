@@ -33,7 +33,7 @@ extension LibraryEnum: AppEnum {
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+    static var description: IntentDescription { "is the Library Open?" }
     
     @Parameter(title: "Library", default: .maryIdemaPew)
     var library: LibraryEnum
