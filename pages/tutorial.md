@@ -25,20 +25,25 @@ On the next page, you will be prompted for some more information about this app.
 ![](./xcode_project_options.png)
 
 Finally, you have to choose where this project will go. Once you've chosen the destination, click "Create". Congrats! You now have a working app in Xcode.
+
 ![](./xcode_project_location.png)
 
 ### Adding a Widget
 
 From Xcode, go to File > New > Target
+
 ![](./xcode_new_target.png)
 
 On the next screen, select "Widget Extension" and click "Next".
+
 ![](./xcode_target_template.png)
 
 You'll be prompted to give this extension a name. Once you're done, click "Finish".
+
 ![](./xcode_target_options.png)
 
 Make sure to activate the scheme for our new target when prompted.
+
 ![](./xcode_activate_scheme.png)
 ## Conclusions
 
