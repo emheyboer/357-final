@@ -96,6 +96,52 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     var library: LibraryEnum
 }
 ```
+
+### Building the ViewModel
+
+To store the information we have on each library, we need to create a ViewModel that we can watch for updates. To get started, all we need to do is create a dictionary mapping the enum we just created to a physical building.
+
+```swift
+//  LibraryViewModel.swift
+import SwiftUI
+
+class LibrariesViewModel: ObservableObject {
+    @Published var libraries: [LibraryEnum: Location] = [:]
+}
+```
+
+Now that we have the ViewModel, we need to write the `Location` struct. Once we start talking to the api, this will let us parse the response and get the data we need.
+
+```swift
+//  LibraryViewModel.swift
+struct Location: Codable, Identifiable {
+    let id = UUID()
+    let name: String
+    let category: String
+    let times: Times
+    let rendered: String
+    enum CodingKeys: String, CodingKey {
+        case name
+        case category
+        case times
+        case rendered
+    }
+}
+
+struct Hours: Codable {
+    let from: String
+    let to: String
+}
+
+struct Times: Codable {
+    let currently_open: Bool
+    let hours: [Hours]?
+}
+
+struct LibrariesResponse: Codable {
+    let locations: [Location]
+}
+```
 ## Conclusions
 
 ## See Also
