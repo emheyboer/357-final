@@ -25,6 +25,4 @@ func fetchLibraries(viewModel: LibrariesViewModel) async {
     } catch {
         print("Failed to fetch libary hours")
     }
-
-    
 }
