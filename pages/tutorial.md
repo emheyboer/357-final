@@ -142,6 +142,37 @@ struct LibrariesResponse: Codable {
     let locations: [Location]
 }
 ```
+
+### Talking to the API
+
+Now that we're ready to parse the API response, it's time to start talking to it. To do this, we create a URL from a string, call `JSONDecoder().decode()` with the `LibrariesResponse` struct we created earlier, and put the locations we want in the ViewModel.
+
+```swift
+//  LibrariesHelper.swift
+import SwiftUI
+
+let api_url = "https://api3.libcal.com/api_hours_today.php?iid=1647&lid=0&format=json&systemTime=1"
+
+func fetchLibraries(viewModel: LibrariesViewModel) async {
+    guard let url = URL(string: api_url) else { return }
+
+    do {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        let response = try JSONDecoder().decode(LibrariesResponse.self, from: data)
+        
+        for location in response.locations {
+            if location.category != "library" { continue }
+            let library = LibraryEnum(rawValue: location.name)!
+            viewModel.libraries[library] = location
+        }
+        
+    } catch {
+        print("Failed to fetch libary hours")
+    }
+}
+```
+
 ## Conclusions
 
 ## See Also
