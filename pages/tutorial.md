@@ -173,6 +173,198 @@ func fetchLibraries(viewModel: LibrariesViewModel) async {
 }
 ```
 
+Now we can call `fetchLibraries()` at any time to get all the information we need.
+### Creating a Widget
+
+We won't always have the data we get from the API, so we need to create a placeholder just in case.
+
+```swift
+//  widget.swift
+import WidgetKit
+import SwiftUI
+
+let preview_location = Location(name: "Library", category: "library",times: Times(currently_open: false, hours: []), rendered: "")
+```
+
+IOS needs us to let it know whenever we need to update the widget, so we have to setup a `TimelineProvider`. There are many different ways to do this, but to get started we just tell iOS to update our widget every hour. We also call `fetchLibraries()` so we're showing the right information.
+
+```swift
+//  widget.swift
+struct Provider: AppIntentTimelineProvider {
+    func placeholder(in context: Context) -> SimpleEntry {
+        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), location: preview_location)
+    }
+
+    func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
+        SimpleEntry(date: Date(), configuration: configuration, location: preview_location)
+    }
+    
+    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
+        var entries: [SimpleEntry] = []
+        
+        let viewModel = LibrariesViewModel()
+        await fetchLibraries(viewModel: viewModel)
+        
+        let library: LibraryEnum = configuration.library
+        print(library)
+        let location = viewModel.libraries[library] ?? preview_location
+
+        let currentDate = Date()
+        for hourOffset in 0 ..< 24 {
+            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
+            let entry = SimpleEntry(date: entryDate, configuration: configuration, location: location)
+            entries.append(entry)
+        }
+
+        return Timeline(entries: entries, policy: .atEnd)
+    }
+}
+```
+
+Since we're using a `SimpleEntry` in the timeline, we'll need to define that.
+
+```swift
+//  widget.swift
+struct SimpleEntry: TimelineEntry {
+    let date: Date
+    let configuration: ConfigurationAppIntent
+    let location: Location
+}
+```
+
+Then we define our widget so that iOS knows what to show onscreen.
+
+```swift
+//  widget.swift
+struct widget: Widget {
+    let kind: String = "widget"
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            widgetEntryView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+            }
+    }
+}
+```
+
+We extend `ConfigurationAppIntent` with our different libraries.
+
+```swift
+//  widget.swift
+extension ConfigurationAppIntent {
+    fileprivate static var maryIdemaPew: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.library = LibraryEnum.maryIdemaPew
+        return intent
+    }
+    
+    fileprivate static var steelcase: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.library = LibraryEnum.steelcase
+        return intent
+    }
+    
+    fileprivate static var freyFoundation: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.library = LibraryEnum.freyFoundation
+        return intent
+    }
+    
+    fileprivate static var lemmen: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.library = LibraryEnum.lemmen
+        return intent
+    }
+}
+```
+
+And we tell Xcode how to show widget previews.
+
+```swift
+//  widget.swift
+#Preview(as: .systemSmall) {
+    widget()
+} timeline: {
+    SimpleEntry(date: .now, configuration: .maryIdemaPew, location: preview_location)
+    SimpleEntry(date: .now, configuration: .steelcase, location: preview_location)
+    SimpleEntry(date: .now, configuration: .freyFoundation, location: preview_location)
+    SimpleEntry(date: .now, configuration: .lemmen, location: preview_location)
+}
+```
+
+Finally, we create the View that will actually show up onscreen. This will take the hours we got from the API, and display them to the user in a friendly way.
+
+```swift
+//  widget.swift
+struct widgetEntryView : View {
+    var entry: Provider.Entry
+    @Environment(\.widgetFamily) var family
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(entry.configuration.library.rawValue)
+                
+                let has_hours = entry.location.times.hours != nil &&  entry.location.times.hours!.count > 0
+                if entry.location.times.currently_open {
+                    if has_hours {
+                        Text("Open until \(entry.location.times.hours![0].to)")
+                    } else {
+                        Text("Open")
+                    }
+                } else {
+                    if has_hours {
+                        Text("Closed until \(entry.location.times.hours![0].from)")
+                    } else {
+                        Text("Closed")
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+			// See code below
+
+        }
+    }
+}
+```
+
+Which gives us the following widget:
+
+![](./widget_without_picture.png)
+
+That's got all the information we want, but it's looking pretty sparse at larger sizes. We can fix this by adding a picture of the library whenever we're using a medium or large widget. To do this, we can conditionally add an image to the View.
+
+```swift
+//  widget.swift
+//  inside widgetEntryView as indicated above
+if family != WidgetFamily.systemSmall  {
+    HStack {
+        Image(entry.configuration.library.rawValue)
+            .resizable()
+            .scaledToFill()
+            .frame(width: 170, height: 400, alignment: .bottomTrailing)
+            .clipped()
+            .cornerRadius(10)
+            .padding(.trailing, -16)
+    }
+}
+```
+
+Then we go to Assets
+
+![](./file_view_assets.png)
+
+And import a picture for each library
+
+![](./assets_pictures.png)
+
+Which gives us a much more appealing result
+
+![](./widget_with_picture.png)
+
+Congrats! You've got a widget.
 ## Conclusions
 
 ## See Also

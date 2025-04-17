@@ -29,9 +29,8 @@ struct Provider: AppIntentTimelineProvider {
         print(library)
         let location = viewModel.libraries[library] ?? preview_location
 
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
+        for hourOffset in 0 ..< 24 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
             let entry = SimpleEntry(date: entryDate, configuration: configuration, location: location)
             entries.append(entry)
@@ -39,7 +38,6 @@ struct Provider: AppIntentTimelineProvider {
 
         return Timeline(entries: entries, policy: .atEnd)
     }
-
 }
 
 struct SimpleEntry: TimelineEntry {
@@ -71,8 +69,6 @@ struct widgetEntryView : View {
                         Text("Closed")
                     }
                 }
-                
-                
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             if family != WidgetFamily.systemSmall  {
