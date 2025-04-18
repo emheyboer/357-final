@@ -367,5 +367,7 @@ Which gives us a much more appealing result
 Congrats! You've got a widget.
 ## Conclusions
 
+Now that we've got a widget, there are a couple more avenues to explore. Currently, users can't see anything when they open the app. You may want to add a couple screens to cover that. WidgetKit also gives us the power to make interactive widgets or live activities. It's definitely worth exploring these features just to see if they're a good fit. And feel free to check out the full source code [here](https://github.com/emheyboer/357-final).
+
 ## See Also
 Apple's documentation for [WidgetKit](https://developer.apple.com/documentation/widgetkit/) is a valuable resource.
